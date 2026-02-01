@@ -1,2 +1,2 @@
 # easytick-microservices
-“Repositorio inicial del proyecto EasyTick, una plataforma de microservicios para gestión de eventos y reservas. Contiene todos los microservicios integrados para desarrollo y pruebas, incluyendo usuarios, eventos y reservas. Planeado para dividirse en repositorios independientes por microservicio en el futuro.”
+“Initial repository for the EasyTick project, a microservices platform for event and booking management. It contains all the integrated microservices for development and testing, including users, events, and bookings. Planned to be divided into separate repositories for each microservice in the future.”
