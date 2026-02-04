@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 
 import com.cibertec.auth_service.model.type.UserRole;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserResponseDTO {
 
     private Long id;
@@ -13,4 +20,3 @@ public class UserResponseDTO {
     private Boolean enabled;
     private LocalDateTime createdAt;
 }
-
