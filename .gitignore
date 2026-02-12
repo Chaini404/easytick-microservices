@@ -1,0 +1,44 @@
+# =========================
+# CONFIG SENSIBLE
+# =========================
+application.properties
+application.yml
+.env
+
+# Si tienes configs dentro de cada microservicio
+**/application.properties
+**/application.yml
+**/.env
+
+# =========================
+# JAVA / SPRING
+# =========================
+target/
+*.class
+*.log
+*.jar
+*.war
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# NODE (si usas gateway con node)
+# =========================
+node_modules/
+
+# =========================
+# TEMP / CACHE
+# =========================
+*.tmp
+*.cache
