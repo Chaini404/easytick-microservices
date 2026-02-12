@@ -1,17 +1,13 @@
 # =========================
-# CONFIG SENSIBLE
+# SECRETOS
 # =========================
-application.properties
-application.yml
 .env
-
-# Si tienes configs dentro de cada microservicio
-**/application.properties
-**/application.yml
 **/.env
+application-dev.properties
+application-prod.properties
 
 # =========================
-# JAVA / SPRING
+# BUILD
 # =========================
 target/
 *.class
@@ -33,12 +29,7 @@ target/
 Thumbs.db
 
 # =========================
-# NODE (si usas gateway con node)
-# =========================
-node_modules/
-
-# =========================
-# TEMP / CACHE
+# TEMP
 # =========================
 *.tmp
 *.cache

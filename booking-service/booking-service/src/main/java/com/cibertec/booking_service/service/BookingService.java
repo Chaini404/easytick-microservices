@@ -3,7 +3,6 @@ package com.cibertec.booking_service.service;
 import com.cibertec.booking_service.model.Booking;
 import com.cibertec.booking_service.model.type.BookingStatus;
 import com.cibertec.booking_service.repository.BookingRepository;
-import com.cibertec.booking_service.dto.*;
 import com.cibertec.booking_service.dto.request.CreateBookingRequest;
 import com.cibertec.booking_service.dto.request.UpdateBookingStatusRequest;
 import com.cibertec.booking_service.dto.response.BookingListResponse;
