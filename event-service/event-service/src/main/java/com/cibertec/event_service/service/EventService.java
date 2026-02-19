@@ -1,6 +1,7 @@
 package com.cibertec.event_service.service;
 
 
+import com.cibertec.event_service.cloudinary.CloudinaryService;
 import com.cibertec.event_service.dto.request.CreateEventRequest;
 import com.cibertec.event_service.dto.request.UpdateEventRequest;
 import com.cibertec.event_service.dto.response.EventListResponse;
@@ -13,6 +14,7 @@ import com.cibertec.event_service.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,14 +26,19 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Transactional
-    public EventResponse createEvent(CreateEventRequest request, Long organizerId) {
+    public EventResponse createEvent(CreateEventRequest request,MultipartFile image, Long organizerId) {
         Event event = eventMapper.toEntity(request);
         event.setOrganizerId(organizerId);
         event.setEventStatus(EventStatus.ACTIVE); // por defecto activo
         event.setAvailableSlots(request.getCapacity());
         event.setCreatedAt(LocalDateTime.now());
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = cloudinaryService.uploadImage(image);
+            event.setImageUrl(imageUrl);
+        }
 
         Event savedEvent = eventRepository.save(event);
         return eventMapper.toResponse(savedEvent);

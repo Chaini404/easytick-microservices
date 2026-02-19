@@ -21,4 +21,5 @@ public class EventListResponse {
     private BigDecimal price;
     private Integer availableSlots;
     private EventStatus eventStatus;
+    private String imageUrl;
 }
