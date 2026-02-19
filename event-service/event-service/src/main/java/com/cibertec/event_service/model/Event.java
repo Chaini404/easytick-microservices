@@ -3,16 +3,18 @@ package com.cibertec.event_service.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.cibertec.event_service.model.type.EventStatus;
 
-@Entity
-@Table(name = "events")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "events")
 public class Event {
 
     @Id
@@ -44,7 +46,4 @@ public class Event {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    
 }
-
