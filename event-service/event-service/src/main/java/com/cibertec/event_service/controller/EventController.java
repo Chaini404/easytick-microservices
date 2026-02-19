@@ -10,6 +10,7 @@ import com.cibertec.event_service.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,12 +21,14 @@ public class EventController {
 
     private final EventService eventService;
 
-    @PostMapping
-    public ResponseEntity<EventResponse> createEvent(@RequestBody CreateEventRequest request) {
-        Long organizerId = 1L; // normalmente viene del token JWT
-        return ResponseEntity.ok(eventService.createEvent(request, organizerId));
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<EventResponse> createEvent(
+            @RequestPart("event") CreateEventRequest request,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+        
+        Long organizerId = 1L; 
+        return ResponseEntity.ok(eventService.createEvent(request, image, organizerId));
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEvent(@PathVariable Long id) {
         return ResponseEntity.ok(eventService.getEventById(id));

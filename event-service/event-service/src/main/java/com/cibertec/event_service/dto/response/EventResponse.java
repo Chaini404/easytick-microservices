@@ -25,4 +25,5 @@ public class EventResponse {
     private Long organizerId;
     private EventStatus eventStatus;
     private LocalDateTime createdAt;
+    private String imageUrl;
 }
