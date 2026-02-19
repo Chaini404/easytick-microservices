@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import com.cibertec.booking_service.model.type.BookingStatus;
+
 @Entity
 @Table(name = "booking_history")
 @Data
@@ -17,10 +19,18 @@ public class BookingHistory {
     @Column(name = "booking_id")
     private Long bookingId;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BookingStatus status;
+
 
     @Column(name = "changed_at")
     private LocalDateTime changedAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.changedAt = LocalDateTime.now();
+    }
 
     // getters y setters
 }

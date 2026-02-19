@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/bookings")
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @PostMapping
+    @PostMapping("/registrar")
     public ResponseEntity<BookingResponse> createBooking(@RequestBody CreateBookingRequest request) {
         // Aquí normalmente obtienes userId del token JWT
         Long userId = 1L; // ejemplo
