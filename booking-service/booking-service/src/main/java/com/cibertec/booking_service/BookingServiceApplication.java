@@ -3,11 +3,13 @@ package com.cibertec.booking_service;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableFeignClients
 public class BookingServiceApplication {
 
 	public static void main(String[] args) {
