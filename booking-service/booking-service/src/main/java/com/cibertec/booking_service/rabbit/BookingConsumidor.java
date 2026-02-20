@@ -1,6 +1,5 @@
 package com.cibertec.booking_service.rabbit;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import com.cibertec.booking_service.model.Booking;
@@ -16,7 +15,6 @@ public class BookingConsumidor {
         this.bookingService = bookingService;
     }
 
-    @RabbitListener(queues = RabbitMQConfigBooking.QUEUE_NAME)
     public void recibirBooking(Booking booking) {
         bookingService.procesarBooking(booking);
     }

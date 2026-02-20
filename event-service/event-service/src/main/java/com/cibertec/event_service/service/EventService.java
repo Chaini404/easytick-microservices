@@ -68,6 +68,17 @@ public class EventService {
         Event updatedEvent = eventRepository.save(event);
         return eventMapper.toResponse(updatedEvent);
     }
+    @Transactional
+    public void reduceAvailableSlots(Long id, Integer quantity) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        if (event.getAvailableSlots() < quantity) {
+            throw new IllegalStateException("No hay cupos suficientes para restar");
+        }
+        event.setAvailableSlots(event.getAvailableSlots() - quantity);
+        eventRepository.save(event);
+    }
 
     @Transactional
     public void deleteEvent(Long id) {

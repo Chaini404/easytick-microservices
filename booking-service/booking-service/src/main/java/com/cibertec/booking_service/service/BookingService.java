@@ -2,6 +2,7 @@ package com.cibertec.booking_service.service;
 
 import com.cibertec.booking_service.model.Booking;
 import com.cibertec.booking_service.model.type.BookingStatus;
+import com.cibertec.booking_service.rabbit.BookingProductor;
 import com.cibertec.booking_service.repository.BookingRepository;
 import com.cibertec.booking_service.dto.*;
 import com.cibertec.booking_service.dto.request.CreateBookingRequest;
@@ -27,7 +28,7 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
     private final EventClient eventClient;
-
+    private final BookingProductor bookingProductor;
     
     @Transactional
     public BookingResponse createBooking(CreateBookingRequest request, Long userId, String token) {
@@ -52,6 +53,7 @@ public class BookingService {
         } catch (Exception e) {
             throw new RuntimeException("Error al reservar los cupos en el evento: " + e.getMessage());
         }
+        bookingProductor.enviarBooking(savedBooking);
         return bookingMapper.toResponse(savedBooking);
     }
 

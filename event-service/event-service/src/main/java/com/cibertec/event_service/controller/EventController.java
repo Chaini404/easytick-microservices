@@ -44,7 +44,14 @@ public class EventController {
                                                      @RequestBody UpdateEventRequest request) {
         return ResponseEntity.ok(eventService.updateEvent(id, request));
     }
-
+    @PostMapping("/{id}/reduce-slots")
+    public ResponseEntity<String> reduceSlots(
+            @PathVariable Long id, 
+            @RequestParam Integer quantity) {
+        
+        eventService.reduceAvailableSlots(id, quantity);
+        return ResponseEntity.ok("Cupos restados exitosamente");
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);

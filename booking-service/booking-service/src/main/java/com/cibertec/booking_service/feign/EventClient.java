@@ -2,8 +2,8 @@ package com.cibertec.booking_service.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -15,7 +15,7 @@ public interface EventClient {
             @PathVariable("id") Long id,
             @RequestHeader("Authorization") String token
     );
-    @PatchMapping("/{id}/reduce-slots")
+    @PostMapping("/{id}/reduce-slots")
     void reduceSlots(
             @PathVariable("id") Long id,
             @RequestParam("quantity") Integer quantity,

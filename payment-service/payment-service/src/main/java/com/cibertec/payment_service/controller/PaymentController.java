@@ -1,17 +1,15 @@
 package com.cibertec.payment_service.controller;
 
-import com.cibertec.payment_service.dto.request.ConfirmPaymentRequest;
-import com.cibertec.payment_service.dto.request.CreatePaymentRequest;
 import com.cibertec.payment_service.dto.response.PaymentListResponse;
 import com.cibertec.payment_service.dto.response.PaymentResponse;
+import com.cibertec.payment_service.model.type.PaymentMethod;
 import com.cibertec.payment_service.service.PaymentService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -20,10 +18,29 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping
-    public ResponseEntity<PaymentResponse> createPayment(@RequestBody CreatePaymentRequest request) {
-        BigDecimal amount = BigDecimal.valueOf(100); // ejemplo, debería venir del Booking Service
-        return ResponseEntity.ok(paymentService.createPayment(request, amount));
+    @PostMapping("/{paymentId}/initiate")
+    public ResponseEntity<Map<String, Object>> initiatePayment(
+            @PathVariable Long paymentId, 
+            @RequestParam PaymentMethod method) {
+        return ResponseEntity.ok(paymentService.initiatePaymentFlow(paymentId, method));
+    }
+
+    @PostMapping("/capture")
+    public ResponseEntity<Map<String, Object>> capturePayment(
+            @RequestParam("token") String token,
+            @RequestParam("method") PaymentMethod method) {
+        
+        String cleanToken = token;
+        if (token.contains("&")) {
+            cleanToken = token.split("&")[0];
+        }
+        cleanToken = cleanToken.trim();
+
+        return ResponseEntity.ok(paymentService.capturePayment(cleanToken, method));
+    }
+    @GetMapping
+    public ResponseEntity<List<PaymentListResponse>> getAllPayments() {
+        return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
     @GetMapping("/{id}")
@@ -34,11 +51,5 @@ public class PaymentController {
     @GetMapping("/booking/{bookingId}")
     public ResponseEntity<List<PaymentListResponse>> getPaymentsByBooking(@PathVariable Long bookingId) {
         return ResponseEntity.ok(paymentService.getPaymentsByBooking(bookingId));
-    }
-
-    @PatchMapping("/{id}/confirm")
-    public ResponseEntity<PaymentResponse> confirmPayment(@PathVariable Long id,
-                                                          @RequestBody ConfirmPaymentRequest request) {
-        return ResponseEntity.ok(paymentService.confirmPayment(id, request));
     }
 }
