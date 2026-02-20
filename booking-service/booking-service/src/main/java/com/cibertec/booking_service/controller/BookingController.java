@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/bookings")
 @RequiredArgsConstructor
@@ -23,11 +21,15 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<BookingResponse> createBooking(@RequestBody CreateBookingRequest request) {
-        // Aquí normalmente obtienes userId del token JWT
-        Long userId = 1L; // ejemplo
-        BigDecimal pricePerTicket = BigDecimal.valueOf(100); // ejemplo
-        BookingResponse response = bookingService.createBooking(request, userId, pricePerTicket);
+    public ResponseEntity<BookingResponse> createBooking(
+            @RequestBody CreateBookingRequest request,
+            @RequestHeader("Authorization") String token // Capturamos el token JWT de la petición original
+    ) {
+        Long userId = 1L; // (En el futuro, saca esto del token)
+        
+        // Pasamos el token al servicio para que lo use en la llamada Feign
+        BookingResponse response = bookingService.createBooking(request, userId, token);
+        
         return ResponseEntity.ok(response);
     }
 

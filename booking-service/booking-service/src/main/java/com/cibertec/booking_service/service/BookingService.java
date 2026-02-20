@@ -8,6 +8,8 @@ import com.cibertec.booking_service.dto.request.CreateBookingRequest;
 import com.cibertec.booking_service.dto.request.UpdateBookingStatusRequest;
 import com.cibertec.booking_service.dto.response.BookingListResponse;
 import com.cibertec.booking_service.dto.response.BookingResponse;
+import com.cibertec.booking_service.feign.EventClient;
+import com.cibertec.booking_service.feign.EventFeignResponse;
 import com.cibertec.booking_service.mapper.BookingMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -24,17 +26,32 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
+    private final EventClient eventClient;
 
     
     @Transactional
-    public BookingResponse createBooking(CreateBookingRequest request, Long userId, BigDecimal pricePerTicket) {
+    public BookingResponse createBooking(CreateBookingRequest request, Long userId, String token) {
+    	EventFeignResponse event;
+        try {
+             event = eventClient.getEventById(request.getEventId(), token);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al consultar el Event Service o evento no encontrado: " + e.getMessage());
+        }
+        if (event.getAvailableSlots() < request.getQuantity()) {
+            throw new IllegalStateException("No hay suficientes cupos. Solicitados: " + request.getQuantity() + ", Disponibles: " + event.getAvailableSlots());
+        }
         Booking booking = bookingMapper.toEntity(request);
         booking.setUserId(userId);
         booking.setBookingStatus(BookingStatus.PENDING);
-        booking.setTotalPrice(pricePerTicket.multiply(BigDecimal.valueOf(request.getQuantity())));
+        booking.setTotalPrice(event.getPrice().multiply(BigDecimal.valueOf(request.getQuantity())));
         booking.setCreatedAt(java.time.LocalDateTime.now());
 
         Booking savedBooking = bookingRepository.save(booking);
+        try {
+            eventClient.reduceSlots(request.getEventId(), request.getQuantity(), token);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al reservar los cupos en el evento: " + e.getMessage());
+        }
         return bookingMapper.toResponse(savedBooking);
     }
 
