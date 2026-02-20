@@ -17,22 +17,31 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "event_id")
+    @Column(name = "event_id", nullable = false)
     private Long eventId;
 
+    @Column(nullable = false)
     private Integer quantity;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private BookingStatus bookingStatus;
 
-    @Column(name = "total_price")
+    @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
+
