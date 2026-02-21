@@ -9,7 +9,9 @@ CREATE TABLE events (
   available_slots INT,
   organizer_id BIGINT NOT NULL,
   status VARCHAR(50),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  category_id bigint,
+  FOREIGN KEY (id) REFERENCES event_categories(category_id)
 );
 
 CREATE TABLE event_categories (

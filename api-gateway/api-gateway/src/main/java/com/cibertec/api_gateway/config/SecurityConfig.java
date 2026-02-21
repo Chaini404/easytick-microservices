@@ -21,18 +21,18 @@ public class SecurityConfig {
     public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
-	@Bean
+    @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // Le decimos a Spring que ejecute nuestro filtro ANTES de intentar autenticar
             .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                // Abrimos eventos públicos y categorías
+                .pathMatchers("/api/events/active", "/api/events/categories", "/api/events/category/**").permitAll()
                 .anyExchange().authenticated()
             );
-
         return http.build();
     }
     @Bean
@@ -46,7 +46,7 @@ public class SecurityConfig {
         ));
 
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -10,13 +10,10 @@ public class PaymentProducer {
     private final RabbitTemplate rabbitTemplate;
 
     public void enviarConfirmacionPago(Long bookingId, String status) {
-        PaymentMessage mensaje = new PaymentMessage(bookingId, status);
+        String jsonMessage = String.format("{\"bookingId\": %d, \"status\": \"%s\"}", bookingId, status);
         
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfigPayment.PAYMENT_EXCHANGE, 
-                RabbitMQConfigPayment.PAYMENT_ROUTING_KEY, 
-                mensaje
-        );
+        rabbitTemplate.convertAndSend("payment_confirmations_queue", jsonMessage);
+        
         System.out.println("Aviso enviado a Booking: Pago " + status + " para reserva " + bookingId);
     }
 }

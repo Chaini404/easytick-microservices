@@ -66,6 +66,7 @@ public class BookingService {
     public List<BookingListResponse> getBookingsByUser(Long userId) {
         return bookingRepository.findByUserId(userId)
                 .stream()
+                .filter(booking -> booking.getBookingStatus() == BookingStatus.CONFIRMED)
                 .map(bookingMapper::toListResponse)
                 .collect(Collectors.toList());
     }
@@ -104,7 +105,19 @@ public class BookingService {
         bookingRepository.save(booking);
     }
   
-
+    @Transactional
+    public void updateStatusFromPayment(Long bookingId, String paymentStatus) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+        
+        if ("COMPLETED".equals(paymentStatus)) {
+            booking.setBookingStatus(BookingStatus.CONFIRMED);
+        } else if ("FAILED".equals(paymentStatus)) {
+            booking.setBookingStatus(BookingStatus.CANCELLED);
+        }
+        
+        bookingRepository.save(booking);
+    }
 
 
 }

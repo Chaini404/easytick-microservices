@@ -31,7 +31,7 @@ public void init() {
         .setSubject(username)
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + 3600000))
-        .signWith(Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+        .signWith(key)
         .compact();
     }
     

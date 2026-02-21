@@ -15,26 +15,27 @@ import com.cibertec.event_service.model.Event;
 @Mapper(componentModel = "spring")
 public interface EventMapper {
 
-    // Entity → Response
     EventResponse toResponse(Event event);
 
-    // Entity → List Response
+    @Mapping(source = "category.name", target = "category")
     EventListResponse toListResponse(Event event);
 
-    // Request → Entity (create)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "organizerId", ignore = true)
     @Mapping(target = "availableSlots", ignore = true)
     @Mapping(target = "eventStatus", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "imageUrl", ignore = true)
+    @Mapping(target = "category", ignore = true) 
     Event toEntity(CreateEventRequest request);
 
-    // Request → Entity (UPDATE parcial)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "organizerId", ignore = true)
     @Mapping(target = "availableSlots", ignore = true)
     @Mapping(target = "eventStatus", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "imageUrl", ignore = true)
+    @Mapping(target = "category", ignore = true) 
     void updateEntity(UpdateEventRequest request, @MappingTarget Event event);
 }

@@ -18,4 +18,5 @@ public class UpdateEventRequest {
     private String location;
     private BigDecimal price;
     private Integer capacity;
+    private Long categoryId;
 }

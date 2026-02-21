@@ -18,4 +18,5 @@ public class BookingConsumidor {
     public void recibirBooking(Booking booking) {
         bookingService.procesarBooking(booking);
     }
+    
 }

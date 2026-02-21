@@ -22,4 +22,5 @@ public class EventListResponse {
     private Integer availableSlots;
     private EventStatus eventStatus;
     private String imageUrl;
+    private String category;
 }
