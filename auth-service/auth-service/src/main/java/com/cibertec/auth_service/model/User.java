@@ -27,6 +27,8 @@ public class User {
 
     private String password;
 
+    @Column(name = "role_type")
+    @Enumerated(EnumType.STRING)   // Guarda "CUSTOMER", "ADMIN", etc
     private UserRole roleType;
 
     private Boolean enabled;

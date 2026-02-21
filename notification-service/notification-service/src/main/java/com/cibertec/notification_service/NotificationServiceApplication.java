@@ -8,27 +8,33 @@ import io.github.cdimascio.dotenv.Dotenv;
 @SpringBootApplication
 public class NotificationServiceApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		
-		Dotenv dotenv = Dotenv.configure()
-        .directory("notification-service/notification-service") // ruta donde está TU .env
-        .ignoreIfMissing()
-        .load();
+        // Carga las variables del .env
+        Dotenv dotenv = Dotenv.configure()
+                .directory("notification-service/notification-service") // ruta donde está TU .env
+                .ignoreIfMissing()
+                .load();
 
+        // Variables de base de datos
+        System.setProperty("DB_URL", dotenv.get("DB_URL"));
+        System.setProperty("DB_USER", dotenv.get("DB_USER"));
+        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
-    System.setProperty("DB_URL", dotenv.get("DB_URL"));
-    System.setProperty("DB_USER", dotenv.get("DB_USER"));
-    System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+        // Variables de RabbitMQ
+        System.setProperty("RABBIT_HOST", dotenv.get("RABBIT_HOST"));
+        System.setProperty("RABBIT_PORT", dotenv.get("RABBIT_PORT"));
+        System.setProperty("RABBIT_USER", dotenv.get("RABBIT_USER"));
+        System.setProperty("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
 
-    System.setProperty("RABBIT_HOST", dotenv.get("RABBIT_HOST"));
-    System.setProperty("RABBIT_PORT", dotenv.get("RABBIT_PORT"));
-    System.setProperty("RABBIT_USER", dotenv.get("RABBIT_USER"));
-    System.setProperty("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
+        // Variable de Eureka
+        System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
 
-    System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
+        // ✅ Variables de correo
+        System.setProperty("MAIL_USERNAME", dotenv.get("MAIL_USERNAME"));
+        System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"));
 
-		SpringApplication.run(NotificationServiceApplication.class, args);
-	}
-
+        // Inicia Spring Boot
+        SpringApplication.run(NotificationServiceApplication.class, args);
+    }
 }
