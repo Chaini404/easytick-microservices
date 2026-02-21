@@ -8,7 +8,9 @@ import com.cibertec.event_service.dto.response.EventListResponse;
 import com.cibertec.event_service.dto.response.EventResponse;
 import com.cibertec.event_service.mapper.EventMapper;
 import com.cibertec.event_service.model.Event;
+import com.cibertec.event_service.model.EventCategory;
 import com.cibertec.event_service.model.type.EventStatus;
+import com.cibertec.event_service.repository.EventCategoryRepository;
 import com.cibertec.event_service.repository.EventRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,10 +29,33 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final CloudinaryService cloudinaryService;
+    private final EventCategoryRepository eventCategory;
+    
+    public List<EventCategory> getAllCategories() {
+        return eventCategory.findAll();
+    }
+    
+    public List<EventListResponse> getActiveEvents() {
+        return eventRepository.findByEventStatus(EventStatus.ACTIVE)
+                .stream()
+                .map(eventMapper::toListResponse)
+                .collect(Collectors.toList());
+    }
 
+    public List<EventListResponse> getEventsByCategory(Long categoryId) {
+        return eventRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(eventMapper::toListResponse)
+                .collect(Collectors.toList());
+    }
     @Transactional
     public EventResponse createEvent(CreateEventRequest request,MultipartFile image, Long organizerId) {
         Event event = eventMapper.toEntity(request);
+        if (request.getCategoryId() != null) {
+            EventCategory category = eventCategory.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            event.setCategory(category);
+        }
         event.setOrganizerId(organizerId);
         event.setEventStatus(EventStatus.ACTIVE); // por defecto activo
         event.setAvailableSlots(request.getCapacity());
@@ -64,6 +89,11 @@ public class EventService {
 
         // MapStruct actualizará solo los campos no nulos
         eventMapper.updateEntity(request, event);
+        if (request.getCategoryId() != null) {
+            EventCategory category = eventCategory.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            event.setCategory(category);
+        }
 
         Event updatedEvent = eventRepository.save(event);
         return eventMapper.toResponse(updatedEvent);
@@ -79,7 +109,22 @@ public class EventService {
         event.setAvailableSlots(event.getAvailableSlots() - quantity);
         eventRepository.save(event);
     }
+    
+    public List<EventListResponse> getEventsByOrganizer(Long organizerId) {
+        return eventRepository.findByOrganizerId(organizerId)
+                .stream()
+                .map(eventMapper::toListResponse)
+                .collect(Collectors.toList());
+    }
 
+    @Transactional
+    public EventResponse changeEventStatus(Long id, EventStatus newStatus) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+        
+        event.setEventStatus(newStatus);
+        return eventMapper.toResponse(eventRepository.save(event));
+    }
     @Transactional
     public void deleteEvent(Long id) {
         Event event = eventRepository.findById(id)

@@ -18,4 +18,6 @@ public class CreateEventRequest {
     private String location;
     private BigDecimal price;
     private Integer capacity;
+    private Long categoryId;
+    private Long organizerId;
 }

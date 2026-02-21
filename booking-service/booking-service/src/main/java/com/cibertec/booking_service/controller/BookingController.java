@@ -18,34 +18,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingController {
 
-    private final BookingService bookingService;
+	private final BookingService bookingService;
 
-    @PostMapping("/registrar")
-    public ResponseEntity<BookingResponse> createBooking(
-            @RequestBody CreateBookingRequest request,
-            @RequestHeader("Authorization") String token // Capturamos el token JWT de la petición original
-    ) {
-        Long userId = 1L; // (En el futuro, saca esto del token)
-        
-        // Pasamos el token al servicio para que lo use en la llamada Feign
-        BookingResponse response = bookingService.createBooking(request, userId, token);
-        
-        return ResponseEntity.ok(response);
-    }
+	@PostMapping("/registrar")
+	public ResponseEntity<BookingResponse> createBooking(@RequestBody CreateBookingRequest request,
+			@RequestHeader("Authorization") String token // Capturamos el token JWT de la petición original
+	) {
+		Long userId = request.getUserId();
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BookingResponse> getBooking(@PathVariable Long id) {
-        return ResponseEntity.ok(bookingService.getBookingById(id));
-    }
+		BookingResponse response = bookingService.createBooking(request, userId, token);
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookingListResponse>> getBookingsByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(bookingService.getBookingsByUser(userId));
-    }
+		return ResponseEntity.ok(response);
+	}
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<BookingResponse> updateBookingStatus(@PathVariable Long id,
-                                                               @RequestBody UpdateBookingStatusRequest request) {
-        return ResponseEntity.ok(bookingService.updateBookingStatus(id, request));
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<BookingResponse> getBooking(@PathVariable Long id) {
+		return ResponseEntity.ok(bookingService.getBookingById(id));
+	}
+
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<List<BookingListResponse>> getBookingsByUser(@PathVariable Long userId) {
+		return ResponseEntity.ok(bookingService.getBookingsByUser(userId));
+	}
+
+	@PatchMapping("/{id}/status")
+	public ResponseEntity<BookingResponse> updateBookingStatus(@PathVariable Long id,
+			@RequestBody UpdateBookingStatusRequest request) {
+		return ResponseEntity.ok(bookingService.updateBookingStatus(id, request));
+	}
 }

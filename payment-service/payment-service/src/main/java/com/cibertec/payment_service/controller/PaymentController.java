@@ -38,6 +38,15 @@ public class PaymentController {
 
         return ResponseEntity.ok(paymentService.capturePayment(cleanToken, method));
     }
+    @PostMapping("/cancel")
+    public ResponseEntity<String> cancelPaymentProcess(@RequestParam("token") String token) {
+        String cleanToken = token;
+        if (token.contains("&")) {
+            cleanToken = token.split("&")[0];
+        }
+        paymentService.cancelPaymentProcess(cleanToken.trim());
+        return ResponseEntity.ok("Pago cancelado y actualizado a FAILED");
+    }
     @GetMapping
     public ResponseEntity<List<PaymentListResponse>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());

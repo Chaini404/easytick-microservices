@@ -47,6 +47,10 @@ public class Event {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private EventCategory category;
+    
     @Column(name = "image_url")
     private String imageUrl;
 }

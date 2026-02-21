@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -25,6 +24,7 @@ public class JwtAuthenticationFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
+ 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return chain.filter(exchange);
         }
@@ -32,12 +32,11 @@ public class JwtAuthenticationFilter implements WebFilter {
         String token = authHeader.substring(7);
 
         try {
-            // En Gateway
-Claims claims = Jwts.parserBuilder()
-        .setSigningKey(Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8)))
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
             String username = claims.getSubject();
 
@@ -48,12 +47,9 @@ Claims claims = Jwts.parserBuilder()
                     .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
 
         } catch (Exception e) {
-            // AÑADE ESTA LÍNEA PARA VER EL ERROR REAL EN LA CONSOLA DEL GATEWAY
-            System.out.println("🔥 ERROR AL VALIDAR TOKEN EN GATEWAY: " + e.getMessage());
-            e.printStackTrace(); 
-            
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            System.out.println("AVISO GATEWAY (Token expirado/inválido): " + e.getMessage());
+      
+            return chain.filter(exchange);
         }
     }
 }

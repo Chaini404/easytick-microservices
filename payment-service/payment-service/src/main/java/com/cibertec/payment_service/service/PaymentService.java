@@ -71,6 +71,16 @@ public class PaymentService {
 
         return captureResponse;
     }
+    @Transactional
+    public void cancelPaymentProcess(String transactionRef) {
+        Payment payment = paymentRepository.findByTransactionRef(transactionRef)
+                .orElseThrow(() -> new RuntimeException("Transacción no encontrada"));
+        
+        payment.setPaymentStatus(PaymentStatus.FAILED);
+        paymentRepository.save(payment);
+        
+        paymentProducer.enviarConfirmacionPago(payment.getBookingId(), "FAILED");
+    }
 
     public PaymentResponse getPaymentById(Long id) {
         Payment payment = paymentRepository.findById(id)

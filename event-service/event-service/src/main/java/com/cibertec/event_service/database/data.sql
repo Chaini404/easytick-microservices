@@ -66,3 +66,6 @@ VALUES
  4,
  'CANCELLED',
  'https://images.unsplash.com/photo-1506126613408-eca07ce68773');
+
+ 
+ INSERT INTO event_categories (name) VALUES ('Conciertos'), ('Teatro'), ('Deportes');

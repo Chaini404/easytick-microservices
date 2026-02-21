@@ -11,6 +11,7 @@ public class CreateBookingRequest {
 
     private Long eventId;
     private Integer quantity;
+    private Long userId;
 
 }
 
