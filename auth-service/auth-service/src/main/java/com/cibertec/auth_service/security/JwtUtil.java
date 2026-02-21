@@ -18,21 +18,21 @@ import jakarta.annotation.PostConstruct;
 public class JwtUtil {
     
     private static final String SECRET_STRING = "mi_clave_super_secreta_de_32_bytes!!";
-    private SecretKey key;
-    
-    @PostConstruct
-    public void init() {
-        this.key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
-    }
+   private SecretKey key;
+
+@PostConstruct
+public void init() {
+    this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+}
     
     // Generar token JWT para un usuario
     public String generateToken(String username) {
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hora
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+        .setSubject(username)
+        .setIssuedAt(new Date())
+        .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+        .signWith(Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+        .compact();
     }
     
     // Obtener los claims (datos) del token

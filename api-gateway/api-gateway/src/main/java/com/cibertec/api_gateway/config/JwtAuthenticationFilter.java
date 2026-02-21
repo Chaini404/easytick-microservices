@@ -13,11 +13,13 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
-	private static final String SECRET_STRING = "mi_clave_super_secreta_de_32_bytes!!";
+
+    private static final String SECRET_STRING = "mi_clave_super_secreta_de_32_bytes!!";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -30,11 +32,12 @@ public class JwtAuthenticationFilter implements WebFilter {
         String token = authHeader.substring(7);
 
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(SECRET_STRING.getBytes()))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            // En Gateway
+Claims claims = Jwts.parserBuilder()
+        .setSigningKey(Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8)))
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
 
             String username = claims.getSubject();
 

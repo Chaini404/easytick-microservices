@@ -6,8 +6,11 @@ import com.cibertec.event_service.dto.request.UpdateEventRequest;
 import com.cibertec.event_service.dto.response.EventListResponse;
 import com.cibertec.event_service.dto.response.EventResponse;
 import com.cibertec.event_service.service.EventService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,20 +18,29 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/events")
 @RequiredArgsConstructor
+@RequestMapping("/api/events")
 public class EventController {
 
     private final EventService eventService;
+    private final ObjectMapper objectMapper; // 👈 inyectado
 
-    @PostMapping(consumes = {"multipart/form-data"})
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EventResponse> createEvent(
-            @RequestPart("event") CreateEventRequest request,
-            @RequestPart(value = "image", required = false) MultipartFile image) {
-        
-        Long organizerId = 1L; 
-        return ResponseEntity.ok(eventService.createEvent(request, image, organizerId));
+            @RequestPart("event") String eventJson,
+            @RequestPart(value = "image", required = false) MultipartFile image)
+            throws Exception {
+
+        CreateEventRequest request =
+                objectMapper.readValue(eventJson, CreateEventRequest.class);
+
+        Long organizerId = 1L;
+
+        return ResponseEntity.ok(
+                eventService.createEvent(request, image, organizerId)
+        );
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEvent(@PathVariable Long id) {
         return ResponseEntity.ok(eventService.getEventById(id));

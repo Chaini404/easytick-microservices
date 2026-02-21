@@ -58,7 +58,7 @@ public class UserService {
         
         // Enviar mensaje a RabbitMQ (notificación)
         try {
-            authProductor.enviarUser(usuarioGuardado);
+            //authProductor.enviarUser(usuarioGuardado); --por ahora comentado
         } catch (Exception e) {
             System.out.println("Error al enviar mensaje a RabbitMQ: " + e.getMessage());
         }
