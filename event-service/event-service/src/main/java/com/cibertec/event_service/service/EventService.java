@@ -10,6 +10,8 @@ import com.cibertec.event_service.mapper.EventMapper;
 import com.cibertec.event_service.model.Event;
 import com.cibertec.event_service.model.EventCategory;
 import com.cibertec.event_service.model.type.EventStatus;
+import com.cibertec.event_service.rabbit.EventMessageDTO;
+import com.cibertec.event_service.rabbit.EventProductor;
 import com.cibertec.event_service.repository.EventCategoryRepository;
 import com.cibertec.event_service.repository.EventRepository;
 
@@ -30,6 +32,7 @@ public class EventService {
     private final EventMapper eventMapper;
     private final CloudinaryService cloudinaryService;
     private final EventCategoryRepository eventCategory;
+    private final EventProductor eventProductor;
     
     public List<EventCategory> getAllCategories() {
         return eventCategory.findAll();
@@ -48,27 +51,48 @@ public class EventService {
                 .map(eventMapper::toListResponse)
                 .collect(Collectors.toList());
     }
+   
     @Transactional
-    public EventResponse createEvent(CreateEventRequest request,MultipartFile image, Long organizerId) {
-        Event event = eventMapper.toEntity(request);
-        if (request.getCategoryId() != null) {
-            EventCategory category = eventCategory.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
-            event.setCategory(category);
-        }
-        event.setOrganizerId(organizerId);
-        event.setEventStatus(EventStatus.ACTIVE); // por defecto activo
-        event.setAvailableSlots(request.getCapacity());
-        event.setCreatedAt(LocalDateTime.now());
-        if (image != null && !image.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(image);
-            event.setImageUrl(imageUrl);
-        }
+public EventResponse createEvent(CreateEventRequest request,
+                                 MultipartFile image,
+                                 Long organizerId, String tokenDelUsuario) {
 
-        Event savedEvent = eventRepository.save(event);
-        return eventMapper.toResponse(savedEvent);
+    Event event = eventMapper.toEntity(request);
+
+    if (request.getCategoryId() != null) {
+        EventCategory category = eventCategory.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+        event.setCategory(category);
     }
 
+    event.setOrganizerId(organizerId);
+    event.setEventStatus(EventStatus.ACTIVE);
+    event.setAvailableSlots(request.getCapacity());
+    event.setCreatedAt(LocalDateTime.now());
+
+    if (image != null && !image.isEmpty()) {
+        String imageUrl = cloudinaryService.uploadImage(image);
+        event.setImageUrl(imageUrl);
+    }
+
+    // 🔥 1. Guardar en BD
+    Event savedEvent = eventRepository.save(event);
+
+    // 🔥 2. Crear mensaje para Rabbit
+    EventMessageDTO message = new EventMessageDTO(
+            savedEvent.getId(),
+            savedEvent.getTitle(),   // usa el nombre exacto de tu atributo
+            savedEvent.getOrganizerId(),
+            tokenDelUsuario 
+    );
+
+    // 🔥 3. Publicar evento
+    eventProductor.enviarEvento(message);
+
+    // 🔥 4. Retornar respuesta normal
+    return eventMapper.toResponse(savedEvent);
+}
+  
     public EventResponse getEventById(Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));

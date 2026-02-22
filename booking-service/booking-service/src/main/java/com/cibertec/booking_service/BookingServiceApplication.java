@@ -14,20 +14,25 @@ public class BookingServiceApplication {
 
 	public static void main(String[] args) {
 
-	    Dotenv dotenv = Dotenv.configure()
-	            .ignoreIfMissing()
-	            .load();
+	    // Carga las variables del .env
+        Dotenv dotenv = Dotenv.configure()
+                .directory("booking-service/booking-service") // ruta donde está TU .env
+                .ignoreIfMissing()
+                .load();
 
-	    setIfNotNull("DB_URL", dotenv.get("DB_URL"));
-	    setIfNotNull("DB_USER", dotenv.get("DB_USER"));
-	    setIfNotNull("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+        // Variables de base de datos
+        System.setProperty("DB_URL", dotenv.get("DB_URL"));
+        System.setProperty("DB_USER", dotenv.get("DB_USER"));
+        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 
-	    setIfNotNull("RABBIT_HOST", dotenv.get("RABBIT_HOST"));
-	    setIfNotNull("RABBIT_PORT", dotenv.get("RABBIT_PORT"));
-	    setIfNotNull("RABBIT_USER", dotenv.get("RABBIT_USER"));
-	    setIfNotNull("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
+        // Variables de RabbitMQ
+        System.setProperty("RABBIT_HOST", dotenv.get("RABBIT_HOST"));
+        System.setProperty("RABBIT_PORT", dotenv.get("RABBIT_PORT"));
+        System.setProperty("RABBIT_USER", dotenv.get("RABBIT_USER"));
+        System.setProperty("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
 
-	    setIfNotNull("EUREKA_URL", dotenv.get("EUREKA_URL"));
+        // Variable de Eureka
+        System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
 
 	    SpringApplication.run(BookingServiceApplication.class, args);
 	}
