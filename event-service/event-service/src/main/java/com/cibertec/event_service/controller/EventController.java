@@ -29,13 +29,13 @@ public class EventController {
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<EventResponse> createEvent(@RequestPart("event") String eventJson,
-			@RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
+			@RequestPart(value = "image", required = false) MultipartFile image, @RequestHeader("Authorization") String token) throws Exception {
 
 		CreateEventRequest request = objectMapper.readValue(eventJson, CreateEventRequest.class);
 
 		Long organizerId = request.getOrganizerId();
 
-		return ResponseEntity.ok(eventService.createEvent(request, image, organizerId));
+		return ResponseEntity.ok(eventService.createEvent(request, image, organizerId, token));
 	}
 
 	@GetMapping("/categories")

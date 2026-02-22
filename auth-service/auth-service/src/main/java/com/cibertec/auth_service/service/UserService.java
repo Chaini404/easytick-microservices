@@ -104,4 +104,19 @@ public class UserService {
         
         return mapper.toResponse(usuario);
     }
+
+    public UserResponseDTO obtenerUsuarioPorId(Long id) {
+
+    User user = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return new UserResponseDTO(
+            user.getId(),
+            user.getEmail(),
+            user.getName(),
+            user.getRoleType(),
+            user.getEnabled(),
+            user.getCreatedAt() // si tienes más campos
+    );
+}
 }

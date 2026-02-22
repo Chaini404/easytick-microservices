@@ -2,9 +2,11 @@ package com.cibertec.notification_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+@EnableFeignClients
 @SpringBootApplication
 public class NotificationServiceApplication {
 
@@ -33,6 +35,10 @@ public class NotificationServiceApplication {
         // ✅ Variables de correo
         System.setProperty("MAIL_USERNAME", dotenv.get("MAIL_USERNAME"));
         System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"));
+        System.setProperty("MAIL_PROPERTIES_MAIL_SMTP_AUTH", dotenv.get("MAIL_PROPERTIES_MAIL_SMTP_AUTH"));
+        System.setProperty("MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE", dotenv.get("MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE"));
+        System.setProperty("MAIL_HOST", dotenv.get("MAIL_HOST"));
+        System.setProperty("MAIL_PORT", dotenv.get("MAIL_PORT"));
 
         // Inicia Spring Boot
         SpringApplication.run(NotificationServiceApplication.class, args);

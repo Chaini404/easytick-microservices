@@ -11,7 +11,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class AuthServiceApplication {
 
     public static void main(String[] args) {
-/*
+
 		Dotenv dotenv = Dotenv.configure()
         .directory("auth-service/auth-service") // ruta donde está TU .env
         .ignoreIfMissing()
@@ -28,7 +28,7 @@ public class AuthServiceApplication {
     System.setProperty("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
 
     System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
-*/
+
         SpringApplication.run(AuthServiceApplication.class, args);
     }
 }

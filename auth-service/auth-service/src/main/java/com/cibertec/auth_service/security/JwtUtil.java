@@ -20,9 +20,13 @@ public class JwtUtil {
     private static final String SECRET_STRING = "mi_clave_super_secreta_de_32_bytes!!";
    private SecretKey key;
 
+   //ojo no cambiar, mantener en .UTF-8 para que el tamaño sea correcto (32 bytes = 256 bits) 
+   //y tener coordination con el api-gateway que también usa esta clave para validar los tokens
 @PostConstruct
 public void init() {
-    this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    this.key = Keys.hmacShaKeyFor(
+        SECRET_STRING.getBytes(StandardCharsets.UTF_8)
+    );
 }
     
     // Generar token JWT para un usuario

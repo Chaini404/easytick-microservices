@@ -69,4 +69,14 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @GetMapping("/user/id/{id}")
+public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable Long id) {
+    try {
+        UserResponseDTO usuario = service.obtenerUsuarioPorId(id);
+        return ResponseEntity.ok(usuario);
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+}
 }
