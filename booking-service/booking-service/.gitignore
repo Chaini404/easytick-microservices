@@ -33,5 +33,9 @@ build/
 .vscode/
 
 
+# Node / React
+node_modules/
+build/
 .env
-application-dev.properties
+# Docker
+docker-compose.override.yml

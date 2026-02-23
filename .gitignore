@@ -1,9 +1,19 @@
-# =========================
+# Java / Maven
+target/
+*.class
+*.jar.original
+*.log
+
 # SECRETOS
-# =========================
 .env
 **/.env
 
+# Docker
+docker-compose.override.yml
+
+# Node / React
+node_modules/
+build/
 
 # =========================
 # BUILD

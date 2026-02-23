@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    environment:
+      - EUREKA_URL=http://eureka:8761/eureka/
+    depends_on:
+      - eureka
+    ports:
+      - "8080:8080"
