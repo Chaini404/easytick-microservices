@@ -33,6 +33,9 @@ build/
 .vscode/
 
 
-### propiedaes ###
+# Node / React
+node_modules/
+build/
 .env
-
+# Docker
+docker-compose.override.yml

@@ -1,6 +1,5 @@
 package com.cibertec.event_service.controller;
 
-import com.cibertec.event_service.dto.*;
 import com.cibertec.event_service.dto.request.CreateEventRequest;
 import com.cibertec.event_service.dto.request.UpdateEventRequest;
 import com.cibertec.event_service.dto.response.EventListResponse;
@@ -34,7 +33,7 @@ public class EventController {
 		CreateEventRequest request = objectMapper.readValue(eventJson, CreateEventRequest.class);
 
 		Long organizerId = request.getOrganizerId();
-
+System.out.println("TOKEN QUE LLEGA DEL FRONT: [" + token + "]");
 		return ResponseEntity.ok(eventService.createEvent(request, image, organizerId, token));
 	}
 

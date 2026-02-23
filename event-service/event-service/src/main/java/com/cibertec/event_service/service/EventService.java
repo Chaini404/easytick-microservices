@@ -79,12 +79,16 @@ public EventResponse createEvent(CreateEventRequest request,
     Event savedEvent = eventRepository.save(event);
 
     // 🔥 2. Crear mensaje para Rabbit
-    EventMessageDTO message = new EventMessageDTO(
-            savedEvent.getId(),
-            savedEvent.getTitle(),   // usa el nombre exacto de tu atributo
-            savedEvent.getOrganizerId(),
-            tokenDelUsuario 
-    );
+EventMessageDTO message = new EventMessageDTO(
+        savedEvent.getId(),
+        savedEvent.getTitle(),
+        savedEvent.getDescription(),
+        savedEvent.getImageUrl(),
+        savedEvent.getLocation(),
+        savedEvent.getEventDate() != null ? savedEvent.getEventDate().toString() : "",
+        savedEvent.getOrganizerId(),
+        tokenDelUsuario
+);
 
     // 🔥 3. Publicar evento
     eventProductor.enviarEvento(message);

@@ -10,9 +10,10 @@ import com.cibertec.auth_service.dto.request.LoginDTO;
 import com.cibertec.auth_service.dto.request.UserRequestDTO;
 import com.cibertec.auth_service.dto.response.AuthResponseDTO;
 import com.cibertec.auth_service.dto.response.UserResponseDTO;
+import com.cibertec.auth_service.feign.UserResponse;
 import com.cibertec.auth_service.mapper.UserMapper;
 import com.cibertec.auth_service.model.User;
-import com.cibertec.auth_service.rabbit.AuthProductor;
+
 import com.cibertec.auth_service.repository.UserRepository;
 import com.cibertec.auth_service.security.JwtUtil;
 
@@ -31,8 +32,6 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
     
-    @Autowired
-    private AuthProductor authProductor;
     
     /**
      * Registrar un nuevo usuario
@@ -42,6 +41,12 @@ public class UserService {
         if (repository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("El email ya está registrado");
         }
+
+         // Validar formato del email
+    if (dto.getEmail() == null || !dto.getEmail().contains("@")) {
+        throw new IllegalArgumentException("Email inválido: " + dto.getEmail());
+    }
+
         
         // Mapear DTO a entidad
         User usuario = mapper.toEntity(dto);
@@ -105,18 +110,15 @@ public class UserService {
         return mapper.toResponse(usuario);
     }
 
-    public UserResponseDTO obtenerUsuarioPorId(Long id) {
+    public UserResponse obtenerUsuarioPorId(Long id) {
 
     User user = repository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        return new UserResponseDTO(
+        return new UserResponse(
             user.getId(),
             user.getEmail(),
-            user.getName(),
-            user.getRoleType(),
-            user.getEnabled(),
-            user.getCreatedAt() // si tienes más campos
+            user.getName()
     );
 }
 }

@@ -1,6 +1,5 @@
 package com.cibertec.notification_service.controller;
 
-import com.cibertec.notification_service.dto.*;
 import com.cibertec.notification_service.dto.request.CreateNotificationRequest;
 import com.cibertec.notification_service.dto.response.NotificationListResponse;
 import com.cibertec.notification_service.dto.response.NotificationResponse;

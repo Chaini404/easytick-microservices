@@ -1,6 +1,6 @@
 package com.cibertec.booking_service.controller;
 
-import com.cibertec.booking_service.dto.*;
+
 import com.cibertec.booking_service.dto.request.CreateBookingRequest;
 import com.cibertec.booking_service.dto.request.UpdateBookingStatusRequest;
 import com.cibertec.booking_service.dto.response.BookingListResponse;

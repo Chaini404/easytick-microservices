@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 public class EventMessageDTO {
 
     private Long eventId;
-    private String titulo;
+    private String title;
+    private String description;
+    private String imageUrl;
+    private String location;
+    private String eventDate; // lo podemos mandar como String para el correo
     private Long organizerId;
     private String token;
 }

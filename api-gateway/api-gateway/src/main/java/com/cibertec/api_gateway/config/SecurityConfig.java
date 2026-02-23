@@ -43,7 +43,9 @@ public class SecurityConfig {
         // Permitir peticiones desde el frontend
         config.setAllowedOrigins(List.of(
             "http://localhost:5173",
-            "http://localhost:3000"
+            "http://localhost:3000",
+            "http://localhost:5174"
+            
         ));
 
         config.setAllowedHeaders(List.of("*"));

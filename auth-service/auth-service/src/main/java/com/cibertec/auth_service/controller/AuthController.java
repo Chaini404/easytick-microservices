@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.cibertec.auth_service.feign.*;
 import com.cibertec.auth_service.dto.request.LoginDTO;
 import com.cibertec.auth_service.dto.request.UserRequestDTO;
 import com.cibertec.auth_service.dto.response.AuthResponseDTO;
@@ -73,7 +73,7 @@ public class AuthController {
     @GetMapping("/user/id/{id}")
 public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable Long id) {
     try {
-        UserResponseDTO usuario = service.obtenerUsuarioPorId(id);
+        UserResponse usuario = service.obtenerUsuarioPorId(id);
         return ResponseEntity.ok(usuario);
     } catch (RuntimeException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
