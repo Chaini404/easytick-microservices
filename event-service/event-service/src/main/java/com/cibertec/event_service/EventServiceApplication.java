@@ -14,10 +14,7 @@ public class EventServiceApplication {
 	public static void main(String[] args) {
 
 		// Carga las variables del .env
-        Dotenv dotenv = Dotenv.configure()
-                .directory("event-service/event-service") // ruta donde está TU .env
-                .ignoreIfMissing()
-                .load();
+        Dotenv dotenv = Dotenv.load();
 
         // Variables de base de datos
         System.setProperty("DB_URL", dotenv.get("DB_URL"));

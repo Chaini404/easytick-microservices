@@ -28,4 +28,6 @@ public class EventResponse {
     private EventStatus eventStatus;
     private LocalDateTime createdAt;
     private String imageUrl;
+    private Long categoryId;
+    private String category;
 }

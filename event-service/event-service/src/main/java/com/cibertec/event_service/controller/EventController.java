@@ -28,12 +28,13 @@ public class EventController {
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<EventResponse> createEvent(@RequestPart("event") String eventJson,
-			@RequestPart(value = "image", required = false) MultipartFile image, @RequestHeader("Authorization") String token) throws Exception {
+			@RequestPart(value = "image", required = false) MultipartFile image,
+			@RequestHeader("Authorization") String token) throws Exception {
 
 		CreateEventRequest request = objectMapper.readValue(eventJson, CreateEventRequest.class);
 
 		Long organizerId = request.getOrganizerId();
-System.out.println("TOKEN QUE LLEGA DEL FRONT: [" + token + "]");
+		System.out.println("TOKEN QUE LLEGA DEL FRONT: [" + token + "]");
 		return ResponseEntity.ok(eventService.createEvent(request, image, organizerId, token));
 	}
 
@@ -62,11 +63,18 @@ System.out.println("TOKEN QUE LLEGA DEL FRONT: [" + token + "]");
 		return ResponseEntity.ok(eventService.getAllEvents());
 	}
 
-	@PatchMapping("/{id}")
-	public ResponseEntity<EventResponse> updateEvent(@PathVariable Long id, @RequestBody UpdateEventRequest request) {
-		return ResponseEntity.ok(eventService.updateEvent(id, request));
-	}
-
+	@PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<EventResponse> updateEvent(
+            @PathVariable Long id, 
+            @RequestPart("event") String eventJson,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws Exception {
+        
+        // Convertimos el JSON String al DTO
+        UpdateEventRequest request = objectMapper.readValue(eventJson, UpdateEventRequest.class);
+        
+        // Pasamos la imagen al servicio
+        return ResponseEntity.ok(eventService.updateEvent(id, request, image));
+    }
 	@GetMapping("/organizer/{organizerId}")
 	public ResponseEntity<List<EventListResponse>> getEventsByOrganizer(@PathVariable Long organizerId) {
 		return ResponseEntity.ok(eventService.getEventsByOrganizer(organizerId));

@@ -13,14 +13,25 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class BookingServiceApplication {
 
 	public static void main(String[] args) {
+		   Dotenv dotenv = Dotenv.load();
+		   
+
+		    System.setProperty("DB_URL", dotenv.get("DB_URL"));
+		    System.setProperty("DB_USER", dotenv.get("DB_USER"));
+		    System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+
+		    // Variables de RabbitMQ
+		    System.setProperty("RABBIT_HOST", dotenv.get("RABBIT_HOST"));
+		    System.setProperty("RABBIT_PORT", dotenv.get("RABBIT_PORT"));
+		    System.setProperty("RABBIT_USER", dotenv.get("RABBIT_USER"));
+		    System.setProperty("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
+
+		    // Variable de Eureka
+		    System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
+
 	    SpringApplication.run(BookingServiceApplication.class, args);
 	}
 
-	private static void setIfNotNull(String key, String value) {
-	    if (value != null) {
-	        System.setProperty(key, value);
-	    }
-	}
 
 
 }

@@ -15,6 +15,8 @@ import com.cibertec.event_service.model.Event;
 @Mapper(componentModel = "spring")
 public interface EventMapper {
 
+	@Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "category.name", target = "category")
     EventResponse toResponse(Event event);
 
     @Mapping(source = "category.name", target = "category")

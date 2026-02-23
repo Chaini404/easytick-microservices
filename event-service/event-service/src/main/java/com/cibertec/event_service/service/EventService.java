@@ -111,16 +111,20 @@ EventMessageDTO message = new EventMessageDTO(
     }
 
     @Transactional
-    public EventResponse updateEvent(Long id, UpdateEventRequest request) {
+    public EventResponse updateEvent(Long id, UpdateEventRequest request, MultipartFile image) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
-        // MapStruct actualizará solo los campos no nulos
         eventMapper.updateEntity(request, event);
         if (request.getCategoryId() != null) {
             EventCategory category = eventCategory.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
             event.setCategory(category);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = cloudinaryService.uploadImage(image);
+            event.setImageUrl(imageUrl);
         }
 
         Event updatedEvent = eventRepository.save(event);

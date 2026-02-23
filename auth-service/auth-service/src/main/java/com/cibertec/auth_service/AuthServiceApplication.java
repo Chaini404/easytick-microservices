@@ -11,6 +11,16 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class AuthServiceApplication {
 
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.load();
+
+        System.setProperty("DB_URL", dotenv.get("DB_URL"));
+        System.setProperty("DB_USER", dotenv.get("DB_USER"));
+        System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
+        System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
+        System.setProperty("RABBIT_HOST", dotenv.get("RABBIT_HOST"));
+        System.setProperty("RABBIT_PORT", dotenv.get("RABBIT_PORT"));
+        System.setProperty("RABBIT_USER", dotenv.get("RABBIT_USER"));
+        System.setProperty("RABBIT_PASSWORD", dotenv.get("RABBIT_PASSWORD"));
 
         SpringApplication.run(AuthServiceApplication.class, args);
     }
