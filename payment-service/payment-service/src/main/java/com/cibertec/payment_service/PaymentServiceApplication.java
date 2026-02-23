@@ -13,7 +13,7 @@ public class PaymentServiceApplication {
 
 	public static void main(String[] args) {
 
-			// Carga las variables del .env
+	/*		// Carga las variables del .env
         Dotenv dotenv = Dotenv.configure()
                 .directory("payment-service/payment-service") // ruta donde está TU .env
                 .ignoreIfMissing()
@@ -40,7 +40,7 @@ public class PaymentServiceApplication {
 		System.setProperty("PAYPAL_RETURN_URL", dotenv.get("PAYPAL_RETURN_URL"));
 		System.setProperty("PAYPAL_CANCEL_URL", dotenv.get("PAYPAL_CANCEL_URL"));
 		
-
+*/
 
 		SpringApplication.run(PaymentServiceApplication.class, args);
 	}
