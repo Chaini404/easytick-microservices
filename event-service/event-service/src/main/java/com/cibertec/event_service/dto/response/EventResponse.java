@@ -18,6 +18,8 @@ public class EventResponse {
     private String title;
     private String description;
     private LocalDateTime eventDate;
+    private String latitud;
+    private String longitud;
     private String location;
     private BigDecimal price;
     private Integer capacity;

@@ -41,6 +41,13 @@ public class BookingService {
         if (event.getAvailableSlots() < request.getQuantity()) {
             throw new IllegalStateException("No hay suficientes cupos. Solicitados: " + request.getQuantity() + ", Disponibles: " + event.getAvailableSlots());
         }
+        if (!"ACTIVE".equals(event.getEventStatus())) { 
+            throw new IllegalStateException("Este evento ha sido desactivado o cancelado y ya no acepta reservas.");
+        }
+
+        if (event.getAvailableSlots() < request.getQuantity()) {
+            throw new IllegalStateException("No hay suficientes cupos...");
+        }
         Booking booking = bookingMapper.toEntity(request);
         booking.setUserId(userId);
         booking.setBookingStatus(BookingStatus.PENDING);
@@ -80,12 +87,10 @@ public class BookingService {
         BookingStatus currentStatus = booking.getBookingStatus();
         BookingStatus newStatus = request.getBookingStatus();
 
-        // 🔴 Regla 1: No se puede modificar si ya está cancelado
         if (currentStatus == BookingStatus.CANCELLED) {
             throw new IllegalStateException("No se puede modificar una reserva cancelada");
         }
 
-        // 🔴 Regla 2: Solo PENDING puede cambiar de estado
         if (currentStatus != BookingStatus.PENDING) {
             throw new IllegalStateException("Solo reservas en estado PENDING pueden cambiar");
         }

@@ -12,7 +12,7 @@ public class NotificationServiceApplication {
 
     public static void main(String[] args) {
 
-        // Carga las variables del .env
+       /* // Carga las variables del .env
         Dotenv dotenv = Dotenv.configure()
                 .directory("notification-service/notification-service") // ruta donde está TU .env
                 .ignoreIfMissing()
@@ -39,7 +39,7 @@ public class NotificationServiceApplication {
         System.setProperty("MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE", dotenv.get("MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE"));
         System.setProperty("MAIL_HOST", dotenv.get("MAIL_HOST"));
         System.setProperty("MAIL_PORT", dotenv.get("MAIL_PORT"));
-
+*/
         // Inicia Spring Boot
         SpringApplication.run(NotificationServiceApplication.class, args);
     }

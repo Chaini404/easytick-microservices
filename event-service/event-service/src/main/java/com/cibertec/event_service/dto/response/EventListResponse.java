@@ -17,6 +17,8 @@ public class EventListResponse {
     private Long id;
     private String title;
     private LocalDateTime eventDate;
+    private String latitud;
+    private String longitud;
     private String location;
     private BigDecimal price;
     private Integer availableSlots;

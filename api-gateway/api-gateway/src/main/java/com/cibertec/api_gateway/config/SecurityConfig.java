@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .pathMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 // Abrimos eventos públicos y categorías
                 .pathMatchers("/api/events/active", "/api/events/categories", "/api/events/category/**").permitAll()
+                .pathMatchers("/api/bookings/ws/**").permitAll()
                 .anyExchange().authenticated()
             );
         return http.build();

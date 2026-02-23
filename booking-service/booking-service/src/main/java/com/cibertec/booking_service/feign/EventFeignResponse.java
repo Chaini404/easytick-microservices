@@ -8,4 +8,5 @@ public class EventFeignResponse {
     private String title;
     private BigDecimal price;
     private Integer availableSlots;
+    private String eventStatus;
 }

@@ -14,7 +14,7 @@ public class BookingServiceApplication {
 
 	public static void main(String[] args) {
 
-	    // Carga las variables del .env
+	  /*  // Carga las variables del .env
         Dotenv dotenv = Dotenv.configure()
                 .directory("booking-service/booking-service") // ruta donde está TU .env
                 .ignoreIfMissing()
@@ -33,7 +33,7 @@ public class BookingServiceApplication {
 
         // Variable de Eureka
         System.setProperty("EUREKA_URL", dotenv.get("EUREKA_URL"));
-
+*/
 	    SpringApplication.run(BookingServiceApplication.class, args);
 	}
 
