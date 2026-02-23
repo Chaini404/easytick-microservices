@@ -114,12 +114,26 @@ EventMessageDTO message = new EventMessageDTO(
     public EventResponse updateEvent(Long id, UpdateEventRequest request, MultipartFile image) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
-
+        Integer oldCapacity = event.getCapacity();
         eventMapper.updateEntity(request, event);
         if (request.getCategoryId() != null) {
             EventCategory category = eventCategory.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
             event.setCategory(category);
+        }
+        if (request.getCapacity() != null && !request.getCapacity().equals(oldCapacity)) {
+            int diferencia = request.getCapacity() - oldCapacity;
+            int nuevosCupos = event.getAvailableSlots() + diferencia;
+            
+            if (nuevosCupos < 0) {
+                throw new IllegalStateException("La nueva capacidad es insuficiente para los tickets ya vendidos");
+            }
+            
+            event.setAvailableSlots(nuevosCupos);
+
+            if (nuevosCupos > 0 && event.getEventStatus() == EventStatus.FINISHED) {
+                event.setEventStatus(EventStatus.ACTIVE);
+            }
         }
 
         if (image != null && !image.isEmpty()) {
@@ -138,7 +152,13 @@ EventMessageDTO message = new EventMessageDTO(
         if (event.getAvailableSlots() < quantity) {
             throw new IllegalStateException("No hay cupos suficientes para restar");
         }
-        event.setAvailableSlots(event.getAvailableSlots() - quantity);
+        int remainingSlots = event.getAvailableSlots() - quantity;
+        event.setAvailableSlots(remainingSlots);
+
+        if (remainingSlots == 0) {
+            event.setEventStatus(EventStatus.FINISHED);
+        }
+
         eventRepository.save(event);
     }
     

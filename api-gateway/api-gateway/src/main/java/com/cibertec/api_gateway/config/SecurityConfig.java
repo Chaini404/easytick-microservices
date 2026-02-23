@@ -30,7 +30,7 @@ public class SecurityConfig {
             .authorizeExchange(exchanges -> exchanges
                 .pathMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 // Abrimos eventos públicos y categorías
-                .pathMatchers("/api/events/active", "/api/events/categories", "/api/events/category/**").permitAll()
+                .pathMatchers("/api/events/active", "/api/events/categories", "/api/events/category/**","/api/events/{id}").permitAll()
                 .pathMatchers("/api/bookings/ws/**").permitAll()
                 .anyExchange().authenticated()
             );
