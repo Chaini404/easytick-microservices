@@ -29,6 +29,9 @@ public class Event {
     @Column(name = "event_date")
     private LocalDateTime eventDate;
 
+    private String latitud;
+    
+    private String longitud;
     private String location;
 
     private BigDecimal price;

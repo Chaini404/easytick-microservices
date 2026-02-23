@@ -39,7 +39,7 @@ public class EventService {
     }
     
     public List<EventListResponse> getActiveEvents() {
-        return eventRepository.findByEventStatus(EventStatus.ACTIVE)
+        return eventRepository.findByEventStatusOrderByIdDesc(EventStatus.ACTIVE)
                 .stream()
                 .map(eventMapper::toListResponse)
                 .collect(Collectors.toList());

@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-
-	List<Event> findByEventStatus(EventStatus eventStatus);
+	
+	List<Event> findByEventStatusOrderByIdDesc(EventStatus eventStatus);
     List<Event> findByCategoryId(Long categoryId);
 
     List<Event> findByEventDateAfter(LocalDateTime date);
